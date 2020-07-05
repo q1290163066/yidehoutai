@@ -1,0 +1,25 @@
+// 拦截请求返回数据，将14位及以上的数字number转成string类型
+axios.defaults.transformResponse = [function(data) {
+  if(typeof data === 'string') {
+    try {
+      let d = data;
+      let array = d.match(/:\d{14}\d*/g);
+      if(array === null){
+        data = JSON.parse(data);
+        return data
+      }
+      // 遍历所有查找14位以上的数字，将其number拼装为string
+      for (var i = 0; i < array.length; i++) {
+        let str = array[i];
+        let number = str.replace(":", "");
+        d = d.replace(str, ':"' + number + '"')
+      }
+      data = JSON.parse(d);
+    } catch(e){
+
+    }
+  }
+  // console.log('返回数据：')
+  // console.log(data)
+  return data;
+}]
